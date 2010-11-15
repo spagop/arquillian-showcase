@@ -174,65 +174,6 @@
          </build>
       </profile>
 
-      <profile>
-         <id>arq-jetty-embedded</id>
-         <activation>
-            <activeByDefault>true</activeByDefault>
-         </activation>
-         <dependencies>
-            <dependency>
-               <groupId>org.jboss.arquillian.container</groupId>
-               <artifactId>arquillian-jetty-embedded-7</artifactId>
-               <version>${project.version}</version>
-               <scope>test</scope>
-            </dependency>
-            <dependency>
-               <groupId>org.eclipse.jetty</groupId>
-               <artifactId>jetty-webapp</artifactId>
-            </dependency>
-            <!-- FIXME shouldn't be required if we aren't using @Resource -->
-            <dependency>
-               <groupId>org.eclipse.jetty</groupId>
-               <artifactId>jetty-plus</artifactId>
-            </dependency>
-            <!-- TODO make a myfaces profile
-            <dependency>
-               <groupId>org.apache.myfaces.core</groupId>
-               <artifactId>myfaces-impl</artifactId>
-               <version>2.0.2</version>
-               <scope>test</scope>
-            </dependency>
-            <dependency>
-               <groupId>org.apache.myfaces.core</groupId>
-               <artifactId>myfaces-api</artifactId>
-               <version>2.0.2</version>
-               <scope>test</scope>
-            </dependency>
-            -->
-            <dependency>
-               <groupId>com.sun.faces</groupId>
-               <artifactId>jsf-impl</artifactId>
-               <version>2.0.3</version>
-               <scope>test</scope>
-            </dependency>
-            <dependency>
-               <groupId>org.glassfish.web</groupId>
-               <artifactId>el-impl</artifactId>
-               <version>2.2</version>
-               <scope>test</scope>
-            </dependency>
-         </dependencies>
-         <build>
-            <testResources>
-               <testResource>
-                  <directory>src/test/resources</directory>
-               </testResource>
-               <testResource>
-                  <directory>src/test/resources-jetty</directory>
-               </testResource>
-            </testResources>
-         </build>
-      </profile>
    </profiles>
 
    <dependencies>
