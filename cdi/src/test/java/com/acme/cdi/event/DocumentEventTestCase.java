@@ -1,6 +1,7 @@
 package com.acme.cdi.event;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import javax.inject.Inject;
 
@@ -20,7 +21,7 @@ public class DocumentEventTestCase
    public static Archive<?> createDeployment()
    {
       return ShrinkWrap.create(JavaArchive.class)
-         .addClasses(Document.class, WordProcessor.class, PrintSpool.class)
+         .addPackage(Document.class.getPackage())
          .addManifestResource(EmptyAsset.INSTANCE, "beans.xml");
    }
    
