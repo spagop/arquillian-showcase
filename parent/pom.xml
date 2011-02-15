@@ -16,7 +16,8 @@
       <version.arquillian>1.0.0.Alpha4</version.arquillian>
       <version.glassfish>3.0.1</version.glassfish>
       <version.jboss_ee6_spec>1.0.0.Beta7</version.jboss_ee6_spec>
-      <version.jbossas_60>6.0.0.20100911-M5</version.jbossas_60>
+      <version.jbossas_60>6.0.0.Final</version.jbossas_60>
+      <version.jbossas_60_snap>6.0.0-SNAPSHOT</version.jbossas_60_snap>
       <version.jbossas_server_manager>1.0.3.GA</version.jbossas_server_manager>
       <version.jetty>8.0.0.M1</version.jetty>
       <version.junit>4.8.1</version.junit>
@@ -146,6 +147,12 @@
          <dependency>
             <groupId>org.jboss.jbossas</groupId>
             <artifactId>jboss-as-client</artifactId>
+            <version>${version.jbossas_60}</version>
+            <type>pom</type>
+         </dependency>
+         <dependency>
+            <groupId>org.jboss.jbossas</groupId>
+            <artifactId>jboss-as-profileservice-client</artifactId>
             <version>${version.jbossas_60}</version>
             <type>pom</type>
          </dependency>

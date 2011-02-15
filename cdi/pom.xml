@@ -93,11 +93,11 @@
                <artifactId>jboss-javaee-6.0</artifactId>
                <type>pom</type>         
             </dependency>
-            <dependency>
-               <groupId>org.jboss.jbossas</groupId>
-               <artifactId>jboss-as-client</artifactId>
-               <type>pom</type>
-            </dependency>
+         <dependency>
+            <groupId>org.jboss.jbossas</groupId>
+            <artifactId>jboss-as-client</artifactId>
+            <type>pom</type>
+         </dependency>
          </dependencies>
          <build>
             <testResources>
