@@ -25,13 +25,16 @@ import java.util.List;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.jsfunit.cdi.InitialPage;
 import org.jboss.jsfunit.jsfsession.JSFClientSession;
 import org.jboss.jsfunit.jsfsession.JSFServerSession;
-import org.jboss.jsfunit.jsfsession.JSFSession;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.descriptor.api.Descriptors;
+import org.jboss.shrinkwrap.descriptor.api.spec.servlet.web.WebAppDescriptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -43,21 +46,24 @@ public class ConferenceCalendarUiTestCase
    {
       return ShrinkWrap.create(WebArchive.class, "test.war")
             .addClasses(Conference.class, ConferenceCalendar.class)
-            .addResource("confcal/submit.xhtml", "submit.xhtml")
-            .addResource("confcal/submission.xhtml", "submission.xhtml")
-            .addWebResource("common/faces-config.xml", "faces-config.xml")
-            .addWebResource(EmptyAsset.INSTANCE, "beans.xml")
-            .setWebXML("common/jsf-web.xml");
+            .addAsWebResource("confcal/submit.xhtml", "submit.xhtml")
+            .addAsWebResource("confcal/submission.xhtml", "submission.xhtml")
+            .addAsWebInfResource("common/faces-config.xml", "faces-config.xml")
+            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+            .setWebXML(new StringAsset(
+                  Descriptors.create(WebAppDescriptor.class)
+                     .facesServlet()
+                     .contextParam("javax.faces.DEFAULT_SUFFIX", ".xhtml")
+                        .exportAsString()
+            ));
    }
    
    private static boolean printRenderedOutput = false;
 
-   @Test
-   public void submittedConferenceShouldBeSaved() throws Exception
+   @Test 
+   @InitialPage("/submit.jsf")
+   public void submittedConferenceShouldBeSaved(JSFClientSession client, JSFServerSession server) throws Exception
    {
-      JSFSession jsfSession = new JSFSession("/submit.jsf");
-      
-      JSFServerSession server = jsfSession.getJSFServerSession();
       assertEquals("/submit.xhtml", server.getCurrentViewID());
       
       assertEquals(null, server.getManagedBeanValue("#{conference.title}"));
@@ -66,7 +72,6 @@ public class ConferenceCalendarUiTestCase
       assertEquals(null, server.getManagedBeanValue("#{conference.location}"));
       assertEquals(null, server.getManagedBeanValue("#{conference.topic}"));
       
-      JSFClientSession client = jsfSession.getJSFClientSession();
       if (printRenderedOutput)
       {
          System.out.println("GET /submit.jsf HTTP/1.1\n\n" + client.getPageAsText());
@@ -115,4 +120,7 @@ public class ConferenceCalendarUiTestCase
       cal.setTime(date);
       return buildDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH));
    }
+
+
+   public static Class<?> clazz = org.jboss.jsfunit.cdi.InitialPage.class;
 }

@@ -30,7 +30,7 @@ public class PacketSendReceiveTest
    {
       return ShrinkWrap.create(JavaArchive.class)
             .addClasses(Packet.class, PacketSender.class, PacketReceiver.class)
-            .addManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
    }
 
    @Test

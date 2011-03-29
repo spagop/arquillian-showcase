@@ -36,7 +36,7 @@ public class SynchronousPaymentProcessorTestCase
    {
       return ShrinkWrap.create(JavaArchive.class)
             .addPackage(Synchronous.class.getPackage())
-            .addManifestResource(SynchronousPaymentProcessorTestCase.class.getPackage(),
+            .addAsManifestResource(SynchronousPaymentProcessorTestCase.class.getPackage(),
                   "beans.xml", "beans.xml");
    }
 

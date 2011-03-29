@@ -22,7 +22,7 @@ public class DocumentEventTestCase
    {
       return ShrinkWrap.create(JavaArchive.class)
          .addPackage(Document.class.getPackage())
-         .addManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+         .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
    }
    
    @Inject WordProcessor processor;

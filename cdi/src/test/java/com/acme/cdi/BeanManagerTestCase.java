@@ -37,7 +37,7 @@ public class BeanManagerTestCase
    @Deployment
    public static Archive<?> createTestArchive() {
       return ShrinkWrap.create(JavaArchive.class, "test.jar")
-         .addManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+         .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
    }
 
    @Inject

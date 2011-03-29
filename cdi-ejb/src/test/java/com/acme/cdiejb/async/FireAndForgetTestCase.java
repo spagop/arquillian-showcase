@@ -1,6 +1,7 @@
 package com.acme.cdiejb.async;
 
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.TimeUnit;
 
@@ -25,8 +26,10 @@ public class FireAndForgetTestCase
    {
       return ShrinkWrap.create(JavaArchive.class)
             .addClasses(FireAndForget.class, FireAndForgetBean.class, BlockingFireAndForgetBean.class)
-            .addManifestResource(
-                  new StringAsset(Descriptors.create(BeansDescriptor.class).alternativeClass(BlockingFireAndForgetBean.class).exportAsString()),
+            .addAsManifestResource(new StringAsset(
+                  Descriptors.create(BeansDescriptor.class)
+                     .alternativeClass(BlockingFireAndForgetBean.class)
+                     .exportAsString()),
                   "beans.xml");
    }
 
@@ -40,7 +43,7 @@ public class FireAndForgetTestCase
       System.out.println("Current thread [id=" + Thread.currentThread().getId() + "; name=" + Thread.currentThread().getName() + "]");
       asyncBean.fire(1000);
       System.out.println("Async operation fired");
-      BlockingFireAndForgetBean.LATCH.await(30, TimeUnit.SECONDS);
+      assertTrue(BlockingFireAndForgetBean.LATCH.await(30, TimeUnit.SECONDS));
       System.out.println("Async thread complete");
       assertNull(BlockingFireAndForgetBean.threadValue.get());
    }

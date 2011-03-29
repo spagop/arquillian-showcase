@@ -53,8 +53,8 @@ public class GamePersistenceTestCase
    {
       return ShrinkWrap.create(WebArchive.class, "test.war")
             .addPackage(Game.class.getPackage())
-            .addManifestResource("test-persistence.xml", "persistence.xml")
-            .addWebResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addAsWebInfResource("test-persistence.xml", "classes/META-INF/persistence.xml")
+            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
    }
    
    @PersistenceContext

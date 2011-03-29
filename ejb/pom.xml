@@ -137,7 +137,7 @@
          <dependencies>
             <dependency>
                <groupId>org.jboss.arquillian.container</groupId>
-               <artifactId>arquillian-glassfish-embedded-3</artifactId>
+               <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
             </dependency>
             <dependency>
                <groupId>org.glassfish.extras</groupId>
@@ -151,7 +151,7 @@
          <dependencies>
             <dependency>
                <groupId>org.jboss.arquillian.container</groupId>
-               <artifactId>arquillian-glassfish-remote-3</artifactId>
+               <artifactId>arquillian-glassfish-remote-3.1</artifactId>
             </dependency>
             <dependency>
                <groupId>org.glassfish.extras</groupId>

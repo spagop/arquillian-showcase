@@ -26,14 +26,16 @@ import org.apache.openejb.assembler.classic.AppInfo;
 import org.apache.openejb.assembler.classic.Assembler;
 import org.apache.openejb.assembler.classic.SecurityServiceInfo;
 import org.apache.openejb.assembler.classic.TransactionServiceInfo;
-import org.jboss.arquillian.protocol.local.LocalMethodExecutor;
-import org.jboss.arquillian.spi.Configuration;
-import org.jboss.arquillian.spi.ContainerMethodExecutor;
-import org.jboss.arquillian.spi.Context;
-import org.jboss.arquillian.spi.DeployableContainer;
-import org.jboss.arquillian.spi.DeploymentException;
-import org.jboss.arquillian.spi.LifecycleException;
+import org.jboss.arquillian.spi.client.container.DeployableContainer;
+import org.jboss.arquillian.spi.client.container.DeploymentException;
+import org.jboss.arquillian.spi.client.container.LifecycleException;
+import org.jboss.arquillian.spi.client.protocol.ProtocolDescription;
+import org.jboss.arquillian.spi.client.protocol.metadata.ProtocolMetaData;
+import org.jboss.arquillian.spi.core.InstanceProducer;
+import org.jboss.arquillian.spi.core.annotation.DeploymentScoped;
+import org.jboss.arquillian.spi.core.annotation.Inject;
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.descriptor.api.Descriptor;
 import org.jboss.shrinkwrap.openejb.config.ShrinkWrapConfigurationFactory;
 
 /**
@@ -44,7 +46,7 @@ import org.jboss.shrinkwrap.openejb.config.ShrinkWrapConfigurationFactory;
  * @author <a href="mailto:andrew.rubinger@jboss.org">ALR</a>
  * @version $Revision: $
  */
-public class OpenEJBContainer implements DeployableContainer
+public class OpenEJBContainer implements DeployableContainer<OpenEJBConfiguration>
 {
 
    //-------------------------------------------------------------------------------------||
@@ -66,6 +68,44 @@ public class OpenEJBContainer implements DeployableContainer
    // Instance Members -------------------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
+   /* (non-Javadoc)
+    * @see org.jboss.arquillian.spi.client.container.DeployableContainer#getConfigurationClass()
+    */
+   @Override
+   public Class<OpenEJBConfiguration> getConfigurationClass()
+   {
+      return OpenEJBConfiguration.class;
+   }
+   
+   /* (non-Javadoc)
+    * @see org.jboss.arquillian.spi.client.container.DeployableContainer#getDefaultProtocol()
+    */
+   @Override
+   public ProtocolDescription getDefaultProtocol()
+   {
+      return new ProtocolDescription("Local");
+   }
+   
+   /* (non-Javadoc)
+    * @see org.jboss.arquillian.spi.client.container.DeployableContainer#deploy(org.jboss.shrinkwrap.descriptor.api.Descriptor)
+    */
+   @Override
+   public void deploy(Descriptor descriptor) throws DeploymentException
+   {
+      // TODO Auto-generated method stub
+      
+   }
+   
+   /* (non-Javadoc)
+    * @see org.jboss.arquillian.spi.client.container.DeployableContainer#undeploy(org.jboss.shrinkwrap.descriptor.api.Descriptor)
+    */
+   @Override
+   public void undeploy(Descriptor descriptor) throws DeploymentException
+   {
+      // TODO Auto-generated method stub
+      
+   }
+   
    /**
     * OpenEJB Assembler
     */
@@ -79,7 +119,8 @@ public class OpenEJBContainer implements DeployableContainer
    /**
     * The deployment
     */
-   private AppInfo deployment;
+   @Inject @DeploymentScoped
+   private InstanceProducer<AppInfo> deployment;
    
    private Field appInfoPathField;
 
@@ -89,9 +130,9 @@ public class OpenEJBContainer implements DeployableContainer
    // Required Implementations -----------------------------------------------------------||
    //-------------------------------------------------------------------------------------||
 
-   public void setup(Context context, Configuration configuration)
+   public void setup(OpenEJBConfiguration configuration)
    {
-      this.configuration = configuration.getContainerConfig(OpenEJBConfiguration.class);
+      this.configuration = configuration;
       appInfoPathField = null;
       for (String candidate : APP_INFO_PATH_FIELD_NAMES)
       {
@@ -110,15 +151,14 @@ public class OpenEJBContainer implements DeployableContainer
       }
    }
    
-   public ContainerMethodExecutor deploy(Context context, final Archive<?> archive) throws DeploymentException
+   public ProtocolMetaData deploy(final Archive<?> archive) throws DeploymentException
    {
       // Deploy as an archive
       final AppInfo appInfo;
       try
       {
          appInfo = config.configureApplication(archive);
-         context.add(AppInfo.class, appInfo);
-         this.deployment = appInfo;
+         this.deployment.set(appInfo);
       }
       catch (final OpenEJBException e)
       {
@@ -134,10 +174,10 @@ public class OpenEJBContainer implements DeployableContainer
       }
 
       // Invoke locally
-      return new LocalMethodExecutor();
+      return new ProtocolMetaData();
    }
 
-   public void start(Context context) throws LifecycleException
+   public void start() throws LifecycleException
    {
       final ShrinkWrapConfigurationFactory config = new ShrinkWrapConfigurationFactory();
       final Assembler assembler = new Assembler();
@@ -157,12 +197,12 @@ public class OpenEJBContainer implements DeployableContainer
       this.config = new ShrinkWrapConfigurationFactory();
    }
 
-   public void stop(Context context) throws LifecycleException
+   public void stop() throws LifecycleException
    {
       assembler.destroy();
    }
 
-   public void undeploy(Context context, final Archive<?> archive) throws DeploymentException
+   public void undeploy(final Archive<?> archive) throws DeploymentException
    {
       // Undeploy the archive
       try
@@ -170,7 +210,7 @@ public class OpenEJBContainer implements DeployableContainer
          String path;
          try
          {
-            path = String.class.cast(appInfoPathField.get(deployment));
+            path = String.class.cast(appInfoPathField.get(deployment.get()));
          }
          catch (Exception e)
          {

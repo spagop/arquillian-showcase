@@ -22,7 +22,7 @@ public class TemperatureConverterTestCase
    {
       return ShrinkWrap.create(JavaArchive.class)
             .addClass(TemperatureConverter.class)
-            .addManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
    }
 
    @Inject

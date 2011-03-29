@@ -10,10 +10,6 @@
       <deploymentExportPath>target/</deploymentExportPath>
    </engine>
 
-   <jbossas-managed:container>
-      <jbossas-managed:jbossHome>/home/dallen/opt/jboss-as-tests</jbossas-managed:jbossHome>
-   </jbossas-managed:container>
-   
    <glassfish-embedded:container>
       <glassfish-embedded:bindHttpPort>7070</glassfish-embedded:bindHttpPort>
       <glassfish-embedded:sunResourcesXml>src/test/resources-glassfish-embedded/sun-resources.xml</glassfish-embedded:sunResourcesXml>

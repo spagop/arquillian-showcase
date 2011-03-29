@@ -40,8 +40,8 @@ public class BasicJSFUnitTestCase
    {
       return ShrinkWrap.create(WebArchive.class, "test.war")
             .addClass(HitchhikersGuide.class)
-            .addResource("basic/index.xhtml", "index.xhtml")
-            .addWebResource("common/faces-config.xml", "faces-config.xml")
+            .addAsWebResource("basic/index.xhtml", "index.xhtml")
+            .addAsWebInfResource("common/faces-config.xml", "faces-config.xml")
             .setWebXML("common/jsf-web.xml");
    }
 

@@ -41,7 +41,7 @@ public class RandomTestCase
    {
       return ShrinkWrap.create(JavaArchive.class)
             .addPackage(Random.class.getPackage())
-            .addManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
    }
 
    @Inject @Random

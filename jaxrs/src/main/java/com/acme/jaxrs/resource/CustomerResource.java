@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.ManagedBean;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -23,7 +24,7 @@ import com.acme.jaxrs.model.Customer_;
 @Path("/customer")
 public class CustomerResource
 {
-   @Inject
+   @PersistenceContext
    private EntityManager em;
 
    @GET

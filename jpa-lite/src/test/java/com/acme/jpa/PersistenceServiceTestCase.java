@@ -27,7 +27,7 @@ public class PersistenceServiceTestCase
          .addClasses(Record.class, LineItem.class,
                PersistenceService.class, PersistenceServiceBean.class,
                PersistenceManager.class, PersistenceManagerBean.class)
-         .addManifestResource("test-persistence.xml", "persistence.xml");
+         .addAsManifestResource("test-persistence.xml", "persistence.xml");
    }
 
    @EJB

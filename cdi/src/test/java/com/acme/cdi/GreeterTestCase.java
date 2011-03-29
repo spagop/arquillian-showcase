@@ -31,13 +31,11 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class GreeterTestCase
 {
-   // @formatter:off
    @Deployment
    public static Archive<?> createDeployment() {
       return ShrinkWrap.create(JavaArchive.class).addClasses(Greeter.class)
-         .addManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+         .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
    }
-   // @formatter:on
 
    @Inject
    Greeter greeter;

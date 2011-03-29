@@ -198,8 +198,14 @@
          <artifactId>arquillian-junit</artifactId>
       </dependency>
       <dependency>
-         <groupId>org.jboss.arquillian.framework</groupId>
-         <artifactId>arquillian-framework-jsfunit</artifactId>
+         <groupId>org.jboss.jsfunit</groupId>
+         <artifactId>jsfunit-arquillian</artifactId>
+         <version>2.0.0.Beta1</version>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.shrinkwrap.descriptors</groupId>
+         <artifactId>shrinkwrap-descriptors-api</artifactId>
+         <version>0.1.4</version>
       </dependency>
       <dependency>
          <groupId>junit</groupId>

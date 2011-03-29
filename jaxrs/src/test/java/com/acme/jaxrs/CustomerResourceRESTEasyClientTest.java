@@ -1,11 +1,9 @@
 package com.acme.jaxrs;
 
-import static org.jboss.arquillian.api.RunModeType.AS_CLIENT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.jboss.arquillian.api.Deployment;
-import org.jboss.arquillian.api.Run;
 import org.jboss.arquillian.junit.Arquillian;
 import com.acme.jaxrs.model.Customer;
 import com.acme.jaxrs.persistence.EntityManagerProducer;
@@ -23,19 +21,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-@Run(AS_CLIENT)
 public class CustomerResourceRESTEasyClientTest
 {
    private static final String REST_URI = "http://localhost:8080/test/rest";
 
-   @Deployment
+   @Deployment(testable = false)
    public static Archive<?> createDeployment()
    {
       return ShrinkWrap.create(WebArchive.class, "test.war")
             .addPackage(Customer.class.getPackage())
             .addClasses(EntityManagerProducer.class, CustomerResource.class)
-            .addWebResource("test-persistence.xml", "classes/META-INF/persistence.xml")
-            .addWebResource("import.sql", "classes/import.sql")
+            .addAsWebInfResource("test-persistence.xml", "classes/META-INF/persistence.xml")
+            .addAsWebInfResource("import.sql", "classes/import.sql")
 
             // enable to activate JAX-RS 1.1 on compliant containers
             //.addClass(JaxRsConfiguration.class)
@@ -44,10 +41,10 @@ public class CustomerResourceRESTEasyClientTest
             .addDirectory("WEB-INF/lib")
             .setWebXML("test-web.xml")
 
-            .addWebResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
    }
 
-   @BeforeClass
+   //@BeforeClass
    public static void initResteasyClient()
    {
       RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
@@ -56,6 +53,7 @@ public class CustomerResourceRESTEasyClientTest
    @Test
    public void testGetCustomerByIdUsingClientProxy() throws Exception
    {
+      initResteasyClient();
       // GET http://localhost:8080/test/rest/customer/1
       CustomerClient client = ProxyFactory.create(CustomerClient.class, REST_URI);
       String response = client.getCustomerById(1);

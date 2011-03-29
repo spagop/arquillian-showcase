@@ -16,8 +16,8 @@
  */
 package org.jboss.arquillian.container.openejb.embedded_3_1;
 
-import org.jboss.arquillian.spi.ContainerConfiguration;
-import org.jboss.arquillian.spi.ContainerProfile;
+import org.jboss.arquillian.spi.ConfigurationException;
+import org.jboss.arquillian.spi.client.container.ContainerConfiguration;
 
 /**
  * OpenEJBConfiguration
@@ -28,8 +28,13 @@ import org.jboss.arquillian.spi.ContainerProfile;
 public class OpenEJBConfiguration implements ContainerConfiguration
 {
 
-   public ContainerProfile getContainerProfile()
+   /* (non-Javadoc)
+    * @see org.jboss.arquillian.spi.client.container.ContainerConfiguration#validate()
+    */
+   @Override
+   public void validate() throws ConfigurationException
    {
-      return ContainerProfile.STANDALONE;
+      // TODO Auto-generated method stub
+      
    }
 }

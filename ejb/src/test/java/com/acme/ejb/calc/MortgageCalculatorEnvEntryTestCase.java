@@ -21,7 +21,7 @@ public class MortgageCalculatorEnvEntryTestCase
       // we have to create a war because ejb-jar.xml must be put in WEB-INF
       return ShrinkWrap.create(WebArchive.class, "test.war")
          .addClasses(MortgageCalculator.class, MortgageCalculatorBean.class)
-         .addWebResource("interest-rate-ejb-jar.xml", "ejb-jar.xml");
+         .addAsWebInfResource("interest-rate-ejb-jar.xml", "ejb-jar.xml");
 //      return ShrinkWrap.create(JavaArchive.class)
 //         .addClasses(MortgageCalculator.class, MortgageCalculatorBean.class)
 //         .addManifestResource("interest-rate-ejb-jar.xml", "ejb-jar.xml");

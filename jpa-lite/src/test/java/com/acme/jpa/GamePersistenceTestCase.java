@@ -45,7 +45,7 @@ public class GamePersistenceTestCase
    {
       return ShrinkWrap.create(JavaArchive.class)
             .addPackage(Game.class.getPackage())
-            .addManifestResource("test-persistence.xml", "persistence.xml");
+            .addAsManifestResource("test-persistence.xml", "persistence.xml");
    }
    
    @EJB
