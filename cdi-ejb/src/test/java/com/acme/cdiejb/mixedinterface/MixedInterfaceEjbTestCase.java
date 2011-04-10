@@ -38,7 +38,7 @@ public class MixedInterfaceEjbTestCase
    {
       JavaArchive ejbClientJar = ShrinkWrap.create(JavaArchive.class, "client.jar")
          .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
-         .addClass(MixedInterfaceEjbTestCase.class)
+         //.addClass(MixedInterfaceEjbTestCase.class)
          .addClass(GreeterRemote.class);
       
       JavaArchive ejbServiceJar = ShrinkWrap.create(JavaArchive.class, "service.jar")
@@ -56,7 +56,8 @@ public class MixedInterfaceEjbTestCase
       
       return ShrinkWrap.create(EnterpriseArchive.class, "test.ear")
          .addAsModule(ejbClientJar)
-         .addAsModule(ejbServiceJar);
+         .addAsModule(ejbServiceJar)
+         .addAsLibrary(ShrinkWrap.create(JavaArchive.class, "tests.jar").addClass(MixedInterfaceEjbTestCase.class));
    }
 
 //   @EJB

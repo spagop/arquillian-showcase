@@ -33,7 +33,11 @@ import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.descriptor.api.Descriptors;
+import org.jboss.shrinkwrap.descriptor.api.spec.jpa.persistence.PersistenceDescriptor;
+import org.jboss.shrinkwrap.descriptor.api.spec.jpa.persistence.SchemaGenerationModeType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -47,17 +51,26 @@ public class GamePersistenceTestCase
       "F-Zero"
    };
 
-   @Deployment
+   @Deployment // java:/H2DS
    public static WebArchive createDeployment()
    {
       return ShrinkWrap.create(WebArchive.class, "test.war")
             .addPackage(Game.class.getPackage())
-            //.addManifestResource("test-persistence.xml", "persistence.xml")
-            .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
+            //.addAsManifestResource("test-persistence.xml", "persistence.xml")
+            .addAsResource(new StringAsset(
+                  Descriptors.create(PersistenceDescriptor.class)
+                     .persistenceUnit("test")
+                        .jtaDataSource("java:/H2DS")
+                        .excludeUnlistedClasses()
+                        .classes(Game.class)
+                        .schemaGenerationMode(SchemaGenerationModeType.CREATE_DROP)
+                        .showSql()
+                      .exportAsString()
+                  ), "META-INF/persistence.xml")
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
    }
    
-   @PersistenceContext
+   @PersistenceContext(unitName = "test")
    EntityManager em;
    
    @Inject

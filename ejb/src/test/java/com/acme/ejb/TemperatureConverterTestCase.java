@@ -46,7 +46,6 @@ public class TemperatureConverterTestCase
    {
       assertEquals(converter.convertToCelsius(32d), 0d, 0d);
       assertEquals(converter.convertToCelsius(212d), 100d, 0d);
-      converter.isTransactionActive();
    }
 
    @Test

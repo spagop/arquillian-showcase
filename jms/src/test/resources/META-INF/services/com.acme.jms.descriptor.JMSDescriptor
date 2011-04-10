@@ -1,0 +1,3 @@
+implClass=com.acme.jms.descriptor.JMSDescriptorImpl
+importerClass=org.jboss.shrinkwrap.descriptor.impl.base.XMLImporter
+defaultName=hornetq.xml

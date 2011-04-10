@@ -31,16 +31,30 @@ import javax.jms.TemporaryQueue;
 import javax.jms.TextMessage;
 
 import org.jboss.arquillian.api.Deployment;
+import org.jboss.arquillian.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.descriptor.api.Descriptor;
+import org.jboss.shrinkwrap.descriptor.api.Descriptors;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import com.acme.jms.descriptor.JMSDescriptor;
 
 @RunWith(Arquillian.class)
 public class MessageDrivenBeanEchoTestCase
 {
-   @Deployment
+   private static final String DEP = "deployment";
+   
+   @Deployment(order = 1)
+   public static Descriptor createQueue() 
+   {
+      return Descriptors.create(JMSDescriptor.class, "test-hornetq-jms.xml")
+            .queue("TestQueue", "/queues/Test");
+   }
+   
+   @Deployment(order = 2, name = DEP)
    public static JavaArchive createDeployment()
    {
       return ShrinkWrap.create(JavaArchive.class).addClass(MessageEchoBean.class);
@@ -48,13 +62,13 @@ public class MessageDrivenBeanEchoTestCase
 
    private static final long QUALITY_OF_SERVICE_THRESHOLD_MS = 5 * 60 * 1000;
    
-   @Resource(mappedName = "/queue/DLQ")
+   @Resource(mappedName = "/queues/Test")
    Queue dlq;
 
    @Resource(mappedName = "/ConnectionFactory")
    ConnectionFactory factory;
 
-   @Test
+   @Test @OperateOnDeployment(DEP)
    public void shouldBeAbleToSendMessage() throws Exception
    {
       String messageBody = "ping";

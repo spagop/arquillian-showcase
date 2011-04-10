@@ -27,8 +27,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import org.jboss.logging.Logger;
+import javax.persistence.PersistenceContextType;
 
 
 @SessionScoped
@@ -37,14 +36,14 @@ public class Login implements Serializable
 {
    private static final long serialVersionUID = 7965455427888195913L;
 
-   @Inject
-   private Logger logger;
+//   @Inject
+//   private Logger logger;
    
    @Inject
    private Credentials credentials;
    
-   @PersistenceContext
-   private EntityManager userDatabase;
+   @PersistenceContext(type = PersistenceContextType.EXTENDED) 
+   private transient EntityManager userDatabase;
 
    private User currentUser;
 
@@ -58,7 +57,7 @@ public class Login implements Serializable
       if (!results.isEmpty())
       {
          currentUser = results.get(0);
-         logger.info(currentUser.getName() + " has successfully signed in.");
+//         logger.info(currentUser.getName() + " has successfully signed in.");
          FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Welcome, " + currentUser.getName()));
       }
    }

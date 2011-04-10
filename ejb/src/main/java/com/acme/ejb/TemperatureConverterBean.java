@@ -48,11 +48,11 @@ public class TemperatureConverterBean implements TemperatureConverter
       try
       {
          ctx.getRollbackOnly();
-         return true;
-      }
-      catch (IllegalStateException e)
-      {
          return false;
+      }
+      catch (Exception e)
+      {
+         return true;
       }
    }
 }

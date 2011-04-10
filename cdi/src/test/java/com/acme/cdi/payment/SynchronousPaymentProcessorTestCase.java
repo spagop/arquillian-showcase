@@ -23,8 +23,10 @@ import javax.inject.Inject;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.descriptor.api.Descriptors;
 import org.jboss.shrinkwrap.descriptor.api.spec.cdi.beans.BeansDescriptor;
 import org.junit.Test;
@@ -34,14 +36,16 @@ import org.junit.runner.RunWith;
 public class SynchronousPaymentProcessorTestCase
 {
    @Deployment
-   public static JavaArchive createDeployment()
+   public static WebArchive createDeployment()
    {
-      BeansDescriptor beansXml = Descriptors.create(BeansDescriptor.class);
-      
-      return ShrinkWrap.create(JavaArchive.class)
-            .addAsManifestResource(new StringAsset(beansXml.alternativeClass(MockPaymentProcessor.class).exportAsString()), beansXml.getDescriptorName())
-//            .addAsManifestResource(SynchronousPaymentProcessorTestCase.class.getPackage(), "beans.xml", "beans.xml")
-            .addPackage(Synchronous.class.getPackage());
+      return ShrinkWrap.create(WebArchive.class, "test.war")
+               .addAsLibrary(
+                     ShrinkWrap.create(JavaArchive.class)
+                        .addPackage(Synchronous.class.getPackage())
+                        .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml"))
+               .addAsWebInfResource(new StringAsset(
+                     Descriptors.create(BeansDescriptor.class)
+                        .alternativeClass(MockPaymentProcessor.class).exportAsString()), "beans.xml");
    }
 
    @Inject @Synchronous

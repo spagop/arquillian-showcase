@@ -57,8 +57,11 @@ public class WebDriverTestCase extends AbstractTestCase
    @ArquillianResource
    URL deploymentUrl;
    
+   @Drone 
+   WebDriver driver;
+   
    @Test
-   public void testLoginAndLogout(@Drone WebDriver driver)
+   public void testLoginAndLogout()
    {
       driver.get(deploymentUrl + "/home.jsf");
 

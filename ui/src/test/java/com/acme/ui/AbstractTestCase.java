@@ -21,9 +21,11 @@ import java.io.File;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
+import org.jboss.shrinkwrap.descriptor.api.Descriptors;
+import org.jboss.shrinkwrap.descriptor.api.spec.jpa.persistence.PersistenceDescriptor;
+import org.jboss.shrinkwrap.descriptor.api.spec.jpa.persistence.SchemaGenerationModeType;
 
 /**
  * This class shares deployment method for all available tests.
@@ -40,19 +42,23 @@ public abstract class AbstractTestCase
    @Deployment(testable = false)
    public static WebArchive createDeployment()
    {
-      MavenDependencyResolver resolver = DependencyResolvers.use(MavenDependencyResolver.class).loadReposFromPom("pom.xml");
-      
       return ShrinkWrap.create(WebArchive.class, "cdi-login.war")
             .addClasses(Credentials.class, LoggedIn.class, Login.class, User.class, UsersProducer.class)            
-            .addAsResource("import.sql")
-            .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
+            .addAsResource(new StringAsset(
+                  Descriptors.create(PersistenceDescriptor.class)
+                     .persistenceUnit("test")
+                        .jtaDataSource("java:/H2DS")
+                        .schemaGenerationMode(SchemaGenerationModeType.CREATE_DROP)
+                        .showSql()
+                      .exportAsString()
+                  ), "META-INF/persistence.xml")
+            .addAsResource("import.sql", "import.sql")
             .addAsWebResource(new File("src/main/webapp/index.html"))
             .addAsWebResource(new File("src/main/webapp/home.xhtml"))
             .addAsWebResource(new File("src/main/webapp/users.xhtml"))
             .addAsWebResource(new File("src/main/webapp/template.xhtml"))
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
             .addAsWebInfResource(new File("src/main/webapp/WEB-INF/faces-config.xml"))
-            .addAsLibraries(resolver.artifact("org.jboss.seam.solder:seam-solder:3.0.0.Final").resolveAsFiles())
             .setWebXML(new File("src/main/webapp/WEB-INF/web.xml"));
    }
 }
