@@ -22,7 +22,7 @@
       <module>jaxrs</module>
       <module>jsf</module>
       <module>ui</module>
-<!--      <module>multinode</module> -->
+      <module>multinode</module>
    </modules>
 
 <!--
