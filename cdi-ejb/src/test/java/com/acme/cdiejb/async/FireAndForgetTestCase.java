@@ -20,31 +20,17 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class FireAndForgetTestCase
 {
-/*   @Deployment
-   public static JavaArchive createDeployment()
-   {
-      BeansDescriptor beansXml = Descriptors.create(BeansDescriptor.class);
-
-      return ShrinkWrap.create(JavaArchive.class)
-            .addClasses(FireAndForget.class, FireAndForgetBean.class, BlockingFireAndForgetBean.class)
-            .addAsManifestResource(
-                  new StringAsset(
-                        beansXml.alternativeClass(BlockingFireAndForgetBean.class).exportAsString()),
-                  beansXml.getDescriptorName());
-   }*/
-   
-   // use on GlassFish because of a visibility bug
    @Deployment
    public static WebArchive createDeployment()
    {
-      BeansDescriptor beansXml = Descriptors.create(BeansDescriptor.class);
-
       return ShrinkWrap.create(WebArchive.class)
             .addClasses(FireAndForget.class, FireAndForgetBean.class, BlockingFireAndForgetBean.class)
             .addAsWebInfResource(
                   new StringAsset(
-                        beansXml.alternativeClass(BlockingFireAndForgetBean.class).exportAsString()),
-                  beansXml.getDescriptorName());
+                        Descriptors.create(BeansDescriptor.class)
+                           .alternativeClass(BlockingFireAndForgetBean.class)
+                           .exportAsString()),
+                           "beans.xml");
    }
 
    @Inject

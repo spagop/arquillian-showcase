@@ -56,7 +56,6 @@ public class GamePersistenceTestCase
    {
       return ShrinkWrap.create(WebArchive.class, "test.war")
             .addPackage(Game.class.getPackage())
-            //.addAsManifestResource("test-persistence.xml", "persistence.xml")
             .addAsResource(new StringAsset(
                   Descriptors.create(PersistenceDescriptor.class)
                      .persistenceUnit("test")
