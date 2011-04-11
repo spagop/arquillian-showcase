@@ -1,7 +1,8 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2010, Red Hat Middleware LLC, and individual contributors
- * by the @authors tag. See the copyright.txt in the distribution for a
+ * Copyright 2011 Red Hat Inc. and/or its affiliates and other contributors
+ * as indicated by the @authors tag. All rights reserved.
+ * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -9,54 +10,39 @@
  * You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed on an "AS IS" BASIS,  
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.acme.multinode.grid.client;
-
-import java.io.IOException;
-
-import javax.inject.Inject;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+package com.acme.multinode.grid;
 
 import org.infinispan.Cache;
 
 /**
- * TestServlet
+ * Utils
  *
  * @author <a href="mailto:aslak@redhat.com">Aslak Knutsen</a>
  * @version $Revision: $
  */
-public class TestServlet extends HttpServlet
+public final class Utils
 {
-   private static final long serialVersionUID = 1L;
-
-   @Inject
-   private Cache<String, Integer> cache;
-
-   @Override
-   public void init() throws ServletException
-   {
-      cache.getVersion();
-   }
+   private Utils() { }
    
-   @Override
-   protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+   public static Integer incrementCache(Cache<String, Integer> cache)
    {
       String key = "counter";
       Integer counter = cache.get(key);
       Integer newCounter;
       if (counter != null)
+      {
          newCounter = counter.intValue() + 1;
+      }
       else
+      {
          newCounter = 1;
-
+      }
       cache.put(key, newCounter);
-      response.getWriter().append(newCounter.toString());
+      return newCounter;
    }
 }

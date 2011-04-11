@@ -24,6 +24,8 @@ import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.jboss.shrinkwrap.resolver.impl.maven.MavenRepositorySettings;
 
+import com.acme.multinode.grid.CacheProducer;
+
 /**
  * Deployments
  *
@@ -36,32 +38,16 @@ public class Deployments
       System.setProperty(MavenRepositorySettings.ALT_USER_SETTINGS_XML_LOCATION, "grid/jboss-repositories.xml");
    }
    
-   public static WebArchive createStandByServer() 
-   {
-      return ShrinkWrap.create(WebArchive.class)
-            .addPackage("com.acme.multinode.grid.standby")
-            .addAsLibraries(
-                  DependencyResolvers.use(MavenDependencyResolver.class)
-                              .artifact("org.infinispan:infinispan-core:4.2.1.FINAL")
-                              .artifact("org.infinispan:infinispan-cachestore-remote:4.2.1.FINAL")
-                              .artifact("org.infinispan:infinispan-server-hotrod:4.2.1.FINAL")
-                              .artifact("log4j:log4j:1.2.16").resolveAsFiles())
-            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-            .addAsResource("grid/standby-infinispan.xml", "standby-infinispan.xml")
-            .setWebXML("grid/standby-in-container-web.xml");
-   }
-
    public static WebArchive createActiveClient() 
    {
       return ShrinkWrap.create(WebArchive.class)
-            .addPackage("com.acme.multinode.grid.client")
+            .addPackage(CacheProducer.class.getPackage())
+            .addClass(TestUtils.class)
             .addAsLibraries(
                   DependencyResolvers.use(MavenDependencyResolver.class)
-                              .artifact("org.infinispan:infinispan-core:4.2.1.FINAL")
-                              .artifact("org.infinispan:infinispan-cachestore-remote:4.2.1.FINAL").resolveAsFiles())
+                              .artifact("org.infinispan:infinispan-core:4.2.1.FINAL").resolveAsFiles())
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
             .addAsResource("grid/infinispan.xml", "infinispan.xml")
-            .addAsResource("grid/hotrod-client.properties", "hotrod-client.properties")
             .setWebXML("grid/in-container-web.xml");
    }
 }

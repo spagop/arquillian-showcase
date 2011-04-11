@@ -17,13 +17,19 @@
  */
 package com.acme.multinode.grid;
 
+import java.net.URL;
+import static com.acme.multinode.grid.TestUtils.readInt;
+import static com.acme.multinode.grid.Utils.incrementCache;
+
 import javax.inject.Inject;
 
 import junit.framework.Assert;
 
 import org.infinispan.Cache;
+import org.jboss.arquillian.api.ArquillianResource;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.api.OperateOnDeployment;
+import org.jboss.arquillian.api.RunAsClient;
 import org.jboss.arquillian.api.TargetsContainer;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -31,7 +37,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * MultiContainerTestCase
+ * 3 node Infinispan cluster Demo. 
+ * 
+ * Deploy 3 replicated caches to 3 different Containers and switch between "in container" and "as client" run mode.
  *
  * @author <a href="mailto:aslak@redhat.com">Aslak Knutsen</a>
  * @version $Revision: $
@@ -39,12 +47,6 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class ClusteredCacheTestCase
 {
-   @Deployment(testable = false) @TargetsContainer("container.standby")
-   public static WebArchive createStandbyDeployment()
-   {
-      return Deployments.createStandByServer();
-   }
-   
    @Deployment(name = "dep.active-1") @TargetsContainer("container.active-1")
    public static WebArchive createTestDeployment()
    {
@@ -57,6 +59,12 @@ public class ClusteredCacheTestCase
       return Deployments.createActiveClient();
    }
    
+   @Deployment(name = "dep.active-3") @TargetsContainer("container.active-3")
+   public static WebArchive createTestDeployment3()
+   {
+      return Deployments.createActiveClient();
+   }
+
    @Inject
    private Cache<String, Integer> cache;
    
@@ -76,7 +84,7 @@ public class ClusteredCacheTestCase
       Assert.assertEquals(2, count);
    }
 
-   @Test @OperateOnDeployment("dep.active-2")
+   @Test @OperateOnDeployment("dep.active-3")
    public void callActive3() throws Exception 
    {
       int count = incrementCache(cache);
@@ -92,7 +100,7 @@ public class ClusteredCacheTestCase
       Assert.assertEquals(4, count);
    }
 
-   @Test @OperateOnDeployment("dep.active-2")
+   @Test @OperateOnDeployment("dep.active-3")
    public void callActive5() throws Exception 
    {
       int count = incrementCache(cache);
@@ -100,20 +108,11 @@ public class ClusteredCacheTestCase
       Assert.assertEquals(5, count);
    }
 
-   private Integer incrementCache(Cache<String, Integer> cache)
+   @Test @RunAsClient @OperateOnDeployment("dep.active-2")
+   public void callActive6(@ArquillianResource URL baseURL) throws Exception 
    {
-      String key = "counter";
-      Integer counter = cache.get(key);
-      Integer newCounter;
-      if (counter != null)
-      {
-         newCounter = counter.intValue() + 1;
-      }
-      else
-      {
-         newCounter = 1;
-      }
-      cache.put(key, newCounter);
-      return newCounter;
+      int count = readInt(baseURL.openStream());
+      System.out.println("Cache incremented, current count: " + count);
+      Assert.assertEquals(6, count);
    }
 }

@@ -11,16 +11,7 @@
    <default>
       <clustering mode="replication">
          <sync/>
-         <stateRetrieval timeout="20000" fetchInMemoryState="true" />
+         <stateRetrieval timeout="1000" fetchInMemoryState="true" />
       </clustering>
-      <loaders passivation="false" shared="true" preload="false">
-         <loader class="org.infinispan.loaders.remote.RemoteCacheStore" fetchPersistentState="true"
-                 ignoreModifications="false" purgeOnStartup="false">
-            <properties>
-               <property name="hotRodClientPropertiesFile" value="hotrod-client.properties"/>
-               <property name="useDefaultRemoteCache" value="true"/>
-            </properties>
-         </loader>
-      </loaders>
    </default>
 </infinispan>
